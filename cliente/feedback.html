@@ -1,1 +1,59 @@
 <!-- cliente/feedback.html: feedback -->
+ <!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Feedback - SigPizza</title>
+    <style>
+        body { font-family: Arial; background: #fff8f0; padding: 2rem; }
+        h2 { color: #d90429; }
+        label, textarea { display: block; margin-top: 1rem; width: 100%; }
+        select, textarea { padding: 8px; border: 1px solid #ccc; border-radius: 5px; }
+        button {
+            margin-top: 15px;
+            background-color: #2b9348; color: white; border: none;
+            padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h2>Envie seu Feedback</h2>
+    <label for="tipo">Tipo:</label>
+    <select id="tipo" required>
+        <option value="">Escolha</option>
+        <option value="ELOGIO">Elogio</option>
+        <option value="SUGESTAO">Sugestão</option>
+        <option value="RECLAMACAO">Reclamação</option>
+    </select>
+    <label for="mensagem">Mensagem:</label>
+    <textarea id="mensagem" rows="4" required placeholder="Escreva seu feedback..."></textarea>
+    <button onclick="enviarFeedback()">Enviar</button>
+
+    <script>
+        function enviarFeedback() {
+            const tipo = document.getElementById("tipo").value;
+            const mensagem = document.getElementById("mensagem").value;
+            const clienteId = sessionStorage.getItem("usuarioId");
+
+            if (!tipo || !mensagem.trim()) {
+                alert("Preencha todos os campos.");
+                return;
+            }
+
+            fetch("http://localhost:8080/feedbacks", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ cliente: { id: clienteId }, tipo, mensagem })
+            })
+            .then(res => {
+                if (res.ok) {
+                    alert("Feedback enviado com sucesso!");
+                    window.location.href = "index.html";
+                } else {
+                    alert("Erro ao enviar feedback.");
+                }
+            });
+        }
+    </script>
+</body>
+</html>

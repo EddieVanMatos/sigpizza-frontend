@@ -1,1 +1,38 @@
 <!-- cliente/status.html: acompanhar pedidos -->
+ <!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Status do Pedido - SigPizza</title>
+    <style>
+        body { font-family: Arial; background: #fff8f0; padding: 2rem; }
+        h2 { color: #d90429; }
+        .card { background: #fff; padding: 1rem; border-radius: 10px; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+    <h2>Status do Pedido</h2>
+    <div class="card" id="info-status"> Carregando... </div>
+
+    <script>
+        async function carregarStatus() {
+            const clienteId = sessionStorage.getItem("usuarioId");
+            const res = await fetch(`http://localhost:8080/pedidos/cliente/${clienteId}`);
+            const pedidos = await res.json();
+            const ultPedido = pedidos[pedidos.length - 1];
+            const info = document.getElementById("info-status");
+
+            if (ultPedido) {
+                info.innerHTML = `
+                    <p><strong>Pedido #${ultPedido.id}</strong></p>
+                    <p>Status: <strong>${ultPedido.status}</strong></p>
+                    <p>Itens: ${ultPedido.itens.length}</p>
+                `;
+            } else {
+                info.innerHTML = "<p>Nenhum pedido encontrado.</p>";
+            }
+        }
+        carregarStatus();
+    </script>
+</body>
+</html>

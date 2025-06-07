@@ -1,1 +1,61 @@
 <!-- cliente/avaliacao.html: avaliar pedidos -->
+ <!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Avaliação - SigPizza</title>
+    <style>
+        body { font-family: Arial; background: #fff8f0; padding: 2rem; }
+        h2 { color: #d90429; }
+        label, textarea { display: block; margin-top: 1rem; width: 100%; }
+        select, textarea { padding: 8px; border: 1px solid #ccc; border-radius: 5px; }
+        button {
+            margin-top: 15px;
+            background-color: #2b9348; color: white; border: none;
+            padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h2>Avaliação do Pedido</h2>
+    <label for="nota">Nota (1 a 5 estrelas):</label>
+    <select id="nota" required>
+        <option value="">Selecione</option>
+        <option value="1">★☆☆☆☆</option>
+        <option value="2">★★☆☆☆</option>
+        <option value="3">★★★☆☆</option>
+        <option value="4">★★★★☆</option>
+        <option value="5">★★★★★</option>
+    </select>
+    <label for="comentario">Comentário (opcional):</label>
+    <textarea id="comentario" rows="4" placeholder="Escreva algo sobre o pedido..."></textarea>
+    <button onclick="enviarAvaliacao()">Enviar Avaliação</button>
+
+    <script>
+        function enviarAvaliacao() {
+            const nota = document.getElementById("nota").value;
+            const comentario = document.getElementById("comentario").value;
+            const clienteId = sessionStorage.getItem("usuarioId");
+            
+            if (!nota) {
+                alert("Por favor, selecione uma nota.");
+                return;
+            }
+
+            fetch("http://localhost:8080/avaliacoes", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ cliente: { id: clienteId }, nota: parseInt(nota), comentario })
+            })
+            .then(res => {
+                if (res.ok) {
+                    alert("Avaliação enviada com sucesso!");
+                    window.location.href = "index.html";
+                } else {
+                    alert("Erro ao enviar avaliação.");
+                }
+            });
+        }
+    </script>
+</body>
+</html>
