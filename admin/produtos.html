@@ -1,1 +1,39 @@
 <!-- admin/produtos.html: cadastro de produtos -->
+ <!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Produtos - SigPizza</title>
+  <style>
+    body { font-family: Arial; background: #fff8f0; padding: 2rem; }
+    h2 { color: #d90429; }
+    table { width: 100%; border-collapse: collapse; background: #fff; margin-top: 1rem; }
+    th, td { padding: 10px; border: 1px solid #ccc; text-align: left; }
+    button {
+      background: #2b9348; color: white;
+      padding: 5px 10px; border: none;
+      border-radius: 5px; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2>Produtos do Cardápio</h2>
+  <table>
+    <thead>
+      <tr><th>Nome</th><th>Preço</th><th>Ações</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Pizza Calabresa</td>
+        <td>R$ 38</td>
+        <td><button>Editar</button> <button>Remover</button></td>
+      </tr>
+      <tr>
+        <td>Refrigerante</td>
+        <td>R$ 5</td>
+        <td><button>Editar</button> <button>Remover</button></td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+</html>

@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Login - SigPizza</title>
+    <title>Cadastro - SigPizza</title>
     <style>
         body {
             font-family: Arial;
@@ -33,19 +33,12 @@
             font-size: 16px;
             border-radius: 5px;
         }
-        .link {
-            margin-top: 15px;
-            font-size: 14px;
-        }
-        .link a {
-            color: #d90429;
-            text-decoration: none;
-        }
     </style>
 </head>
 <body>
-    <h2>Login SigPizza</h2>
-    <form onsubmit="login(event)">
+    <h2>Cadastro SigPizza</h2>
+    <form onsubmit="cadastrar(event)">
+        <label>Nome:<input type="text" id="nome" required></label>
         <label>Telefone:<input type="text" id="telefone" required></label>
         <label>Senha:<input type="password" id="senha" required></label>
         <label>Perfil:
@@ -55,38 +48,25 @@
                 <option value="ADMIN">Administrador</option>
             </select>
         </label>
-        <button type="submit">Entrar</button>
+        <button type="submit">Cadastrar</button>
     </form>
-    <div class="link">
-        Ainda não tem conta? <a href="cadastro.html">Clique aqui para se cadastrar</a>
-    </div>
     <script>
-        async function login(e) {
+        async function cadastrar(e) {
             e.preventDefault();
+            const nome = document.getElementById("nome").value;
             const telefone = document.getElementById("telefone").value;
             const senha = document.getElementById("senha").value;
-            const perfilSelecionado = document.getElementById("perfil").value;
-            const res = await fetch("http://localhost:8080/usuarios/login", {
+            const perfil = document.getElementById("perfil").value;
+            const res = await fetch("http://localhost:8080/usuarios", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ telefone, senha })
+                body: JSON.stringify({ nome, telefone, senha, perfil })
             });
             if (res.ok) {
-                const user = await res.json();
-                if (user.perfil === perfilSelecionado) {
-                    sessionStorage.setItem("usuarioId", user.id);
-                    alert(`Login bem-sucedido como ${perfilSelecionado.toLowerCase()}`);
-                    const redirecionamento = {
-                        ADMIN: "admin/painel.html",
-                        FUNCIONARIO: "funcionario/painel.html",
-                        CLIENTE: "cliente/index.html"
-                    };
-                    window.location.href = redirecionamento[perfilSelecionado];
-                } else {
-                    alert("Perfil selecionado não corresponde ao usuário.");
-                }
+                alert("Cadastro realizado com sucesso!");
+                window.location.href = "login.html";
             } else {
-                alert("Telefone ou senha incorretos.");
+                alert("Erro ao cadastrar usuário.");
             }
         }
     </script>

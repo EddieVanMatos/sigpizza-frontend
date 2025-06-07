@@ -1,1 +1,73 @@
 <!-- cliente/index.html: login e cadastro -->
+ <!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - SigPizza</title>
+  <style>
+    body { font-family: Arial; background: #fff8f0; padding: 2rem; }
+    h2 { color: #d90429; }
+    label { display: block; margin-top: 10px; }
+    input, select {
+      width: 100%; padding: 8px; margin-top: 5px;
+      border: 1px solid #ccc; border-radius: 5px;
+    }
+    button {
+      margin-top: 15px;
+      background-color: #2b9348;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Login SigPizza</h2>
+  <form onsubmit="login(event)">
+    <label>Telefone:<input type="text" id="telefone" required></label>
+    <label>Senha:<input type="password" id="senha" required></label>
+    <label>Perfil:
+      <select id="perfil" required>
+        <option value="CLIENTE">Cliente</option>
+        <option value="ADMIN">Administrador</option>
+      </select>
+    </label>
+    <button type="submit">Entrar</button>
+  </form>
+
+  <script>
+    async function login(e) {
+      e.preventDefault();
+      const telefone = document.getElementById("telefone").value;
+      const senha = document.getElementById("senha").value;
+      const perfilSelecionado = document.getElementById("perfil").value;
+
+      const res = await fetch("http://localhost:8080/usuarios/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ telefone, senha })
+      });
+
+      if (res.ok) {
+        const user = await res.json();
+        if (user.perfil === perfilSelecionado) {
+          sessionStorage.setItem("usuarioId", user.id);
+          alert("Login bem-sucedido como " + perfilSelecionado.toLowerCase());
+          if (perfilSelecionado === "ADMIN") {
+            window.location.href = "admin/painel.html";
+          } else {
+            window.location.href = "cliente/index.html";
+          }
+        } else {
+          alert("Perfil selecionado não corresponde ao usuário.");
+        }
+      } else {
+        alert("Telefone ou senha incorretos.");
+      }
+    }
+  </script>
+</body>
+</html>
