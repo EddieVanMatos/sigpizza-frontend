@@ -1,1 +1,50 @@
 <!-- funcionario/detalhes-pedido.html: atualizar status -->
+ <!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Detalhes do Pedido - SigPizza</title>
+  <style>
+    body { font-family: Arial; background: #fff8f0; padding: 2rem; }
+    h2 { color: #d90429; }
+    .card {
+      background: #fff;
+      padding: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      margin-top: 1rem;
+    }
+    .item {
+      margin-bottom: 8px;
+    }
+    button {
+      background-color: #2b9348;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h2>Detalhes do Pedido</h2>
+  <div class="card" id="detalhes-pedido">
+    <p><strong>Pedido:</strong> #1234</p>
+    <p><strong>Cliente:</strong> João Silva</p>
+    <p><strong>Status:</strong> Preparando</p>
+    <div class="item">🍕 Pizza Calabresa - Média</div>
+    <div class="item">🥤 Coca-Cola 2L</div>
+    <div class="item">🍟 Batata Frita</div>
+    <button onclick="atualizarStatus()">Marcar como Entregue</button>
+  </div>
+
+  <script>
+    function atualizarStatus() {
+      alert("Status do pedido atualizado para 'Entregue'");
+      document.querySelector("#detalhes-pedido").querySelector("p:nth-child(3)").innerHTML = "<strong>Status:</strong> Entregue";
+    }
+  </script>
+</body>
+</html>

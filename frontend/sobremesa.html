@@ -1,1 +1,93 @@
 <!-- sobremesa.html: catálogo de sobremesas -->
+ <!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cardápio de Sobremesas - SigPizza</title>
+  <style>
+    body { font-family: Arial; padding: 2rem; background: #fff8f0; }
+    h2 { color: #d90429; }
+    .pizza { margin-bottom: 1rem; padding: 1rem; border: 1px solid #ddd; border-radius: 5px; }
+    .pizza input[type="number"] { width: 50px; margin-left: 10px; }
+    .pizza button { margin-top: 10px; background-color: #2b9348; color: white; border: none; padding: 5px 10px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h2>Escolha suas Sobremesas</h2>
+  <div id="lista-pizzas"></div>
+  <button onclick="finalizarPedido()">Finalizar Pedido</button>
+
+  <script>
+    const pedido = [];
+
+    const sobremesas = [
+      { id: 101, nome: "Brownie", ingredientes: "Chocolate meio amargo, sorvete de creme", preco: 12 },
+      { id: 102, nome: "Petit Gâteau", ingredientes: "Bolo quente de chocolate com sorvete", preco: 14 },
+      { id: 103, nome: "Torta de Limão", ingredientes: "Base crocante, creme de limão, merengue", preco: 10 },
+    ];
+
+    function renderizarPizzas() {
+      const lista = document.getElementById("lista-pizzas");
+      sobremesas.forEach(p => {
+        const div = document.createElement("div");
+        div.className = "pizza";
+        div.innerHTML = `
+          <strong>${p.nome}</strong><br>
+          Ingredientes: ${p.ingredientes}<br>
+          Preço: R$ ${p.preco}<br>
+          Quantidade: <input type="number" id="qtd-${p.id}" min="0" value="0" />
+          <button onclick="adicionar(${p.id})">Adicionar</button>
+        `;
+        lista.appendChild(div);
+      });
+    }
+
+    function adicionar(id) {
+      const qtd = parseInt(document.getElementById(`qtd-${id}`).value);
+      if (qtd > 0) {
+        const produto = sobremesas.find(p => p.id === id);
+        const jaExiste = pedido.find(p => p.produto.id === id);
+        if (jaExiste) {
+          jaExiste.quantidade += qtd;
+        } else {
+          pedido.push({ produto: { id }, quantidade: qtd });
+        }
+        alert(`${produto.nome} adicionada ao pedido.`);
+      }
+    }
+
+    async function finalizarPedido() {
+      const clienteId = sessionStorage.getItem("clienteId");
+      if (!clienteId) {
+        alert("Faça login antes de finalizar o pedido.");
+        window.location.href = "../cliente/index.html";
+        return;
+      }
+
+      if (pedido.length === 0) {
+        alert("Adicione pelo menos uma sobremesa.");
+        return;
+      }
+
+      const resp = await fetch("http://localhost:8080/pedidos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          cliente: { id: clienteId },
+          status: "Em preparo",
+          itens: pedido
+        })
+      });
+
+      if (resp.ok) {
+        alert("Pedido realizado com sucesso!");
+        window.location.href = "../cliente/status.html";
+      } else {
+        alert("Erro ao enviar pedido.");
+      }
+    }
+
+    renderizarPizzas();
+  </script>
+</body>
+</html>

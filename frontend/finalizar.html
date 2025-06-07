@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Finalizar Pedido - SigPizza</title>
+  <style>
+    body { font-family: Arial; padding: 2rem; background: #fff8f0; }
+    h2 { color: #d90429; }
+    ul { list-style: none; padding-left: 0; }
+    li { margin-bottom: 1rem; border: 1px solid #ddd; border-radius: 5px; padding: 10px; }
+    button {
+      background-color: #2b9348;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 5px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Resumo do Pedido</h2>
+  <ul id="resumo"></ul>
+  <button onclick="enviar()">Enviar Pedido</button>
+
+  <script>
+    const itens = JSON.parse(sessionStorage.getItem("pedido")) || [];
+    const ul = document.getElementById("resumo");
+
+    itens.forEach(item => {
+      const li = document.createElement("li");
+      li.textContent = `${item.produto.nome || 'Produto'} - Quantidade: ${item.quantidade}`;
+      ul.appendChild(li);
+    });
+
+    async function enviar() {
+      const clienteId = sessionStorage.getItem("clienteId");
+      if (!clienteId) {
+        alert("Você precisa estar logado para enviar o pedido.");
+        window.location.href = "../cliente/index.html";
+        return;
+      }
+
+      if (itens.length === 0) {
+        alert("Você não adicionou nenhum item ao pedido.");
+        return;
+      }
+
+      const response = await fetch("http://localhost:8080/pedidos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          cliente: { id: clienteId },
+          status: "Em preparo",
+          itens
+        })
+      });
+
+      if (response.ok) {
+        alert("Pedido enviado com sucesso!");
+        sessionStorage.removeItem("pedido");
+        window.location.href = "../cliente/status.html";
+      } else {
+        alert("Erro ao enviar o pedido.");
+      }
+    }
+  </script>
+</body>
+</html>
