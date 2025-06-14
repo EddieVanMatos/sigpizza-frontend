@@ -1,0 +1,17 @@
+{
+  "name": "sigpizza-frontend",
+  "version": "1.0.0",
+  "description": "SigPizza - Modern Pizza Delivery Website",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  },
+  "keywords": ["pizza", "delivery", "restaurant", "food"],
+  "author": "SigPizza Team",
+  "license": "MIT"
+}
